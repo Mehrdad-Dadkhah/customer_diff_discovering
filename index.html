@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پرسشنامه تمایز واقعی پروفایل مشتریان</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    
+    <style>
+        :root {
+            --primary-color: #2563eb;       
+            --secondary-color: #1e40af;     
+            --accent-color: #64748b;        
+            --bg-color: #f8fafc;            
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --text-light: #475569;
+            --error-color: #ef4444;
+            --success-color: #10b981;
+            
+            --footer-bg: #1e293b;           
+            --footer-text: #f8fafc;         
+            --footer-sub: #94a3b8;          
+            
+            /* رنگ‌های جدید برای ابزار تفکر */
+            --insight-bg: #eff6ff;          /* آبی بسیار روشن */
+            --insight-border: #bfdbfe;      /* آبی ملایم */
+            --insight-text: #1e3a8a;        /* سرمه‌ای خوانا */
+            --input-bg: #f1f5f9;            /* خاکستری ملایم برای اینپوت */
+            --code-bg: #1e293b;             /* رنگ تیره برای فرمول */
+            --code-text: #e2e8f0;           /* متن روشن برای فرمول */
+        }
+
+        * {
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            line-height: 1.8;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.01);
+            padding: 0;
+            margin: auto;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            border: 1px solid #f1f5f9;
+        }
+
+        .content-wrapper {
+            padding: 2.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .progress-container {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 4px;
+            background-color: #f1f5f9;
+            z-index: 10;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            color: var(--text-color);
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            color: var(--secondary-color);
+            margin-top: 0;
+            font-weight: 700;
+        }
+
+        .step {
+            display: none;
+            animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        p {
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+            color: var(--text-light);
+        }
+
+        /* --- NEW INSIGHT BOX (REPLACES WARNING) --- */
+        .insight-box {
+            background-color: var(--insight-bg);
+            border: 1px solid var(--insight-border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+            color: var(--insight-text);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            line-height: 1.6;
+        }
+
+        .insight-icon {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* --- NEW FORMULA HERO BLOCK --- */
+        .formula-hero {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace; /* فونت مهندسی */
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border: 1px solid #334155;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+            direction: ltr; /* فرمول چپ چین */
+        }
+
+        ul, ol {
+            padding-right: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        /* --- NEW INPUT CANVAS --- */
+        textarea {
+            width: 100%;
+            padding: 20px;
+            border: 1px solid transparent; /* حذف بوردر پیش فرض */
+            border-radius: 12px;
+            resize: vertical;
+            min-height: 160px;
+            font-family: 'Vazirmatn', sans-serif;
+            font-size: 1rem;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        textarea:focus {
+            background-color: #ffffff;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1), 0 4px 6px -1px rgba(0,0,0,0.1);
+            outline: none;
+        }
+
+        textarea.error {
+            box-shadow: 0 0 0 2px var(--error-color), 0 4px 6px -1px rgba(239, 68, 68, 0.1);
+            background-color: #fef2f2;
+        }
+
+        textarea::placeholder {
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: var(--input-bg);
+        }
+
+        .radio-option:hover {
+            background-color: #e2e8f0;
+        }
+
+        .radio-option input[type="radio"] {
+            margin-left: 12px;
+            accent-color: var(--primary-color);
+            transform: scale(1.2);
+        }
+
+        .radio-option.selected {
+            border: 1px solid var(--primary-color);
+            background-color: #eff6ff;
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.05);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: right;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: var(--secondary-color);
+            font-weight: 700;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+            margin-bottom: 0;
+            gap: 1rem;
+            padding-top: 2rem;
+        }
+
+        button {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Vazirmatn', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-next {
+            background-color: var(--primary-color);
+            color: white;
+            flex: 1;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-next:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-1px);
+        }
+
+        .btn-prev {
+            background-color: transparent;
+            color: var(--text-light);
+            border: 1px solid #cbd5e1;
+        }
+
+        .btn-prev:hover {
+            background-color: #f1f5f9;
+            color: var(--text-color);
+        }
+
+        .btn-download {
+            background-color: var(--success-color);
+            color: white;
+            width: 100%;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        .btn-download:hover {
+            background-color: #059669;
+        }
+
+        .result-item {
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .result-question {
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .result-answer {
+            color: var(--text-color);
+            white-space: pre-wrap;
+            line-height: 1.8;
+        }
+
+        /* --- FOOTER STYLES --- */
+        .growth-footer {
+            width: 100%;
+            height: 90px;
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
+            padding: 0 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+        }
+
+        .footer-brand-block {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .brand-name {
+            font-weight: 700;
+            font-size: 16px;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+            margin-bottom: 2px;
+        }
+
+        .brand-role {
+            font-weight: 400;
+            font-size: 12px;
+            color: var(--footer-sub);
+        }
+
+        .footer-contact-block {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .contact-phone {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 500;
+            font-size: 15px;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+            direction: ltr;
+        }
+
+        .cta-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .cta-btn:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .cta-icon {
+            width: 20px;
+            height: 20px;
+            fill: #ffffff;
+        }
+
+        /* --- TOAST NOTIFICATION STYLES --- */
+        .toast-container {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background-color: #dc2626; /* رنگ قرمز هشدار */
+            color: white;
+            padding: 14px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            z-index: 2000;
+            font-size: 0.95rem;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast-container.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast-icon {
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 0;
+                margin-top: 0;
+                margin-bottom: 0;
+                box-shadow: none;
+                border: none;
+                min-height: auto; 
+            }
+            .content-wrapper {
+                padding: 1.5rem;
+            }
+            
+            .growth-footer {
+                padding: 0 1.5rem;
+                height: 80px;
+            }
+            
+            .toast-container {
+                width: 90%;
+                text-align: center;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="toast-container" id="toast">
+    <span class="toast-icon">⚠️</span>
+    <span id="toast-message">پیام خطا</span>
+</div>
+
+<div class="container">
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <form id="quizForm" onsubmit="return false;" style="display: flex; flex-direction: column; flex-grow: 1;">
+        
+        <div class="content-wrapper">
+            <!-- Intro -->
+            <div class="step active" data-step="0">
+                <header>
+                    <h1>پرسشنامه تمایز</h1>
+                    <p>آیا واقعا محصول یا مخاطب ما متمایز است؟ میزان این تمایز چقدر است؟</p>
+                </header>
+                <div class="insight-box" style="margin-top: 2rem;">
+                    <span class="insight-icon">💡</span>
+                    <div>
+                        <p style="margin:0; color:inherit;">آیا کاملا اقیانوس آبی است یا ما فکر میکنیم که آبی است؟ این پرسشنامه برای کشف حقیقت است.</p>
+                    </div>
+                </div>
+                <div class="btn-container">
+                    <div style="flex:1"></div>
+                    <button class="btn-next" onclick="nextStep()">شروع پرسشنامه</button>
+                </div>
+            </div>
+
+            <!-- Q1 -->
+            <div class="step" data-step="1">
+                <h2>سوال ۱</h2>
+                <p>مشتری دقیقاً چه «پروگرس یا پیشرفتی» را در زندگی‌اش می‌خواهد که فقط با شما ممکن است؟</p>
+                
+                <div class="insight-box">
+                    <span class="insight-icon">ℹ️</span>
+                    <div>
+                        اگر پاسخ شما شامل عبارات کلی مثل «کیفیت بالا» یا «خدمات بهتر» باشد این سوال را رد شده‌اید. تمایز باید در نتیجه نهایی کاربر باشد نه ویژگی محصول.
+                    </div>
+                </div>
+
+                <textarea id="q1" name="q1" placeholder="مثال: کاهش زمان گزارش‌دهی پایان ماه از ۵ روز به ۴ ساعت..."></textarea>
+                <div class="btn-container">
+                    <button class="btn-prev" onclick="prevStep()">قبلی</button>
+                    <button class="btn-next" onclick="nextStep()">بعدی</button>
+                </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="step" data-step="2">
+                <h2>سوال ۲</h2>
+                <p>فرض کنید برند شما فردا صبح به کلی نابود شود. این سگمنت خاص دقیقاً چه کار می‌کند؟</p>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q2" value="الف) مشکل را رها می‌کند؟">
+                        الف) مشکل را رها می‌کند؟
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q2" value="ب) از اکسل / کاغذ / روش دستی استفاده می‌کند؟">
+                        ب) از اکسل / کاغذ / روش دستی استفاده می‌کند؟
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q2" value="ج) ترکیبی از دو محصول دیگر را می‌خرد؟">
+                        ج) ترکیبی از دو محصول دیگر را می‌خرد؟
+                    </label>
+                </div>
+                <div class="btn-container">
+                    <button class="btn-prev" onclick="prevStep()">قبلی</button>
+                    <button class="btn-next" onclick="nextStep()">بعدی</button>
+                </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="step" data-step="3">
+                <h2>سوال ۳</h2>
+                <p>اگر یک رقیب با منابع مالی ۱۰ برابر شما (مثلاً دیجی کالا، اسنپ یا یک غول خارجی) تصمیم بگیرد دقیقاً همین سگمنت را هدف بگیرد، چه چیزی مانع موفقیت آنها در ۳ ماه می‌شود؟</p>
+                
+                <div class="insight-box">
+                    <span class="insight-icon">💡</span>
+                    <div>
+                        <strong>پاسخ‌های غیر قابل قبول:</strong> «برند ما قوی‌تر است»، «ما اولین بودیم»، «تیم ما بهتر است».<br>
+                        <strong>پاسخ‌های علمی:</strong> تکنولوژی انحصاری (IP)، هزینه جابجایی (Switching Cost) بالا، اثر شبکه‌ای (Network Effect).
+                    </div>
+                </div>
+
+                <textarea id="q3" name="q3" placeholder="مثال: داده‌های تاریخی ۵ ساله‌ای که فقط ما داریم و قابل کپی‌برداری نیست..."></textarea>
+                <div class="btn-container">
+                    <button class="btn-prev" onclick="prevStep()">قبلی</button>
+                    <button class="btn-next" onclick="nextStep()">بعدی</button>
+                </div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="step" data-step="4">
+                <h2>سوال ۴</h2>
+                <p>اگر فردا قیمت را ۲۰٪ افزایش دهید چه درصدی از مشتریان ریزش می‌کنند؟</p>
+                <textarea id="q4" name="q4" placeholder="مثال: ۱۰٪ از مشتریان حساس به قیمت ریزش می‌کنند، اما مشتریان سازمانی می‌مانند چون..."></textarea>
+                <div class="btn-container">
+                    <button class="btn-prev" onclick="prevStep()">قبلی</button>
+                    <button class="btn-next" onclick="nextStep()">بعدی</button>
+                </div>
+            </div>
+
+            <!-- Q5 -->
+            <div class="step" data-step="5">
+                <h2>سوال ۵</h2>
+                <p>مشتری با استفاده از محصول شما دقیقاً چقدر در [زمان / پول / یا ریسک] صرفه‌جویی می‌کند؟</p>
+                <p>لطفاً فرمول زیر را تکمیل کنید:</p>
+                
+                <!-- Hero Formula -->
+                <div class="formula-hero">
+                    Value = (Benefits - Cost)
+                </div>
+
+                <div class="insight-box">
+                    <span class="insight-icon">ℹ️</span>
+                    <div>
+                        اگر نتوانید این را به عدد تبدیل کنید (مثلاً: "ما ۳۰٪ زمان فرایند را کاهش می‌دهیم")، تمایز شما "ذهنی" است نه "عینی".
+                    </div>
+                </div>
+
+                <textarea id="q5" name="q5" placeholder="مثال: ۱۰ ساعت صرفه‌جویی در هفته × ۵۰ دلار در ساعت = ۵۰۰ دلار ارزش هفتگی خلق شده..."></textarea>
+                <div class="btn-container">
+                    <button class="btn-prev" onclick="prevStep()">قبلی</button>
+                    <button class="btn-next" onclick="nextStep()">بعدی</button>
+                </div>
+            </div>
+
+            <!-- Q6 -->
+            <div class="step" data-step="6">
+                <h2>سوال ۶</h2>
+                <p>هزینه جابجایی (Switching Cost) برای مشتری چقدر است؟ چرا مشتری فعلی نمی‌تواند شما را ترک کند؟</p>
+                <ul style="list-style: none; margin-top: 1rem;">
+                    <li><label style="font-weight: normal; cursor: pointer;"><input type="checkbox" id="sc1"> آیا داده‌های تاریخی‌اش از دست می‌رود؟</label></li>
+                    <li><label style="font-weight: normal; cursor: pointer;"><input type="checkbox" id="sc2"> آیا نیاز به آموزش مجدد پرسنل دارد؟</label></li>
+                    <li><label style="font-weight: normal; cursor: pointer;"><input type="checkbox" id="sc3"> آیا جریمه مالی دارد؟</label></li>
+                </ul>
+                <textarea id="q6" name="q6" placeholder="توضیحات تکمیلی..."></textarea>
+                <div class="btn-container">
+                    <button class="btn-prev" onclick="prevStep()">قبلی</button>
+                    <button class="btn-next" onclick="nextStep()">بعدی</button>
+                </div>
+            </div>
+
+            <!-- Info Slide for Q7 -->
+            <div class="step" data-step="7">
+                <h2>راهنمای محاسبات (پیش‌نیاز سوال ۷)</h2>
+                <p>نسبت CAC به Real LTV در این سگمنت خاص چقدر است؟</p>
+                
+                <div class="formula-hero" style="font-size: 0.9rem;">
+                    Real LTV = (درآمد × مارجین) / (نرخ تورم + 1)^t
+                </div>
+                
+                <div class="insight-box">
+                    <span class="insight-icon">💡</span>
+                    <div>
+                        <strong>نکته مهم:</strong> تورم ارزش پول آتی را نابود می‌کند. پولی که سال دوم می‌گیرید باید دوبار تقسیم بر (۱ + نرخ تورم) شود.
+                    </div>
+                </div>
+
+                <div class="insight-box" style="background-color: #fffbeb; border-color: #fcd34d; color: #92400e;">
+                    <span class="insight-icon">⚠️</span>
+                    <div>
+                        <strong>ضریب تبدیل ایران:</strong> برای تبدیل CAC جهانی، عدد دلاری را در نرخ ارز ضرب و بر ۱۰ تا ۱۲ تقسیم کنید (چون نیروی انسانی ارزان‌تر است).
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button class="btn-prev" onclick="prevStep()">قبلی</button>
+                    <button class="btn-next" onclick="nextStep()">متوجه شدم، رفتن به سوال</button>
+                </div>
+            </div>
+
+            <!-- Q7 Actual -->
+            <div class="step" data-step="8">
+                <h2>سوال ۷</h2>
+                <p>با توجه به توضیحات قبلی، نسبت CAC به Real LTV خود را محاسبه کنید.</p>
+                
+                <table style="margin-top:0;">
+                    <tr>
+                        <th>شاخص</th>
+                        <th>روش تبدیل به اعداد ایران</th>
+                    </tr>
+                    <tr>
+                        <td>قیمت محصول (ARPU)</td>
+                        <td>قیمت دلاری × نرخ ارز ÷ ۴.۵</td>
+                    </tr>
+                    <tr>
+                        <td>هزینه جذب (CAC)</td>
+                        <td>هزینه دلاری × نرخ ارز ÷ ۱۲</td>
+                    </tr>
+                </table>
+
+                <textarea id="q7" name="q7" placeholder="مثال: CAC ما ۵۰۰ هزار تومان است و Real LTV برای ۳ سال برابر با ۱۵ میلیون تومان..."></textarea>
+                <div class="btn-container">
+                    <button class="btn-prev" onclick="prevStep()">قبلی</button>
+                    <button class="btn-next" onclick="nextStep()">بعدی</button>
+                </div>
+            </div>
+
+            <!-- Q8 -->
+            <div class="step" data-step="9">
+                <h2>سوال ۸: آزمون «قانون وبر-فچنر»</h2>
+                <p>شدت تمایز شما چقدر است؟ (نیاز به شدت ۱۴۰ تا ۱۵۰ نسبت به ۱۰۰ رقیب)</p>
+                
+                <div class="insight-box">
+                    <span class="insight-icon">👁️</span>
+                    <div>
+                        <strong>تست ۳ ثانیه:</strong> اگر لوگو و نام برند را حذف کنیم، آیا مشتری وفادار در کمتر از ۳ ثانیه می‌فهمد این محصول شماست؟
+                    </div>
+                </div>
+
+                <textarea id="q8" name="q8" placeholder="نتیجه تست کور (Blind Test) روی ۵ مشتری..."></textarea>
+                <div class="btn-container">
+                    <button class="btn-prev" onclick="prevStep()">قبلی</button>
+                    <button class="btn-next" onclick="nextStep()">بعدی</button>
+                </div>
+            </div>
+
+            <!-- Q9 -->
+            <div class="step" data-step="10">
+                <h2>سوال ۹</h2>
+                <p>اگر محصول شما را پنهانی با محصول رقیب عوض کنیم (عوامل صوتی و بصری یکسان‌سازی شوند) و فقط عملکرد/محتوا جابجا شود، چه زمانی صدای اعتراض مشتری بلند می‌شود؟</p>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q9" value="الف) بلافاصله، چون کارش لنگ می‌ماند.">
+                        الف) بلافاصله، چون کارش لنگ می‌ماند.
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q9" value="ب) بعد از چند روز.">
+                        ب) بعد از چند روز.
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q9" value="ج) احتمالاً متوجه نمی‌شود یا خودش را وفق می‌دهد.">
+                        ج) احتمالاً متوجه نمی‌شود یا خودش را وفق می‌دهد.
+                    </label>
+                </div>
+                <div class="btn-container">
+                    <button class="btn-prev" onclick="prevStep()">قبلی</button>
+                    <button class="btn-next" onclick="nextStep()">بعدی</button>
+                </div>
+            </div>
+
+            <!-- Q10 -->
+            <div class="step" data-step="11">
+                <h2>سوال ۱۰</h2>
+                <p>آیا مشتری برای درک تمایز شما نیاز به خواندن راهنما، دیدن ویدیو یا فکر کردن دارد؟</p>
+                <textarea id="q10" name="q10" placeholder="توضیحات..."></textarea>
+                <div class="btn-container">
+                    <button class="btn-prev" onclick="prevStep()">قبلی</button>
+                    <button class="btn-next" onclick="nextStep()">بعدی</button>
+                </div>
+            </div>
+
+            <!-- Q11 -->
+            <div class="step" data-step="12">
+                <h2>سوال ۱۱</h2>
+                <p>می‌توانید بگویید مشتریان شما چه «بسته‌ای از ویژگی‌ها» را دارند که آن‌ها را از مشتریان سایر برندهای به‌ظاهر مشابه متمایز می‌کند؟</p>
+                <textarea id="q11" name="q11" placeholder="مثال: مشتریان ما مدیران فنی هستند که دغدغه امنیت دارند، نه قیمت..."></textarea>
+                <div class="btn-container">
+                    <button class="btn-prev" onclick="prevStep()">قبلی</button>
+                    <button class="btn-next" onclick="nextStep()">بعدی</button>
+                </div>
+            </div>
+
+            <!-- Q12 -->
+            <div class="step" data-step="13">
+                <h2>سوال ۱۲ (SEO)</h2>
+                <p>می‌توانید حداقل ۵ مورد از جستجوهای مخاطبان احتمالی (کلمه یا عبارت) در گوگل را بگویید که برند شما باید آنجا باشد اما رقیب نه؟</p>
+                <textarea id="q12" name="q12" placeholder="۱. ...&#10;۲. ...&#10;۳. ...&#10;۴. ...&#10;۵. ..."></textarea>
+                <div class="btn-container">
+                    <button class="btn-prev" onclick="prevStep()">قبلی</button>
+                    <button class="btn-next" onclick="nextStep()">بعدی</button>
+                </div>
+            </div>
+
+            <!-- Q13 -->
+            <div class="step" data-step="14">
+                <h2>سوال ۱۳ (LLMs)</h2>
+                <p>می‌توانید حداقل ۵ مورد از سوالات مخاطبان احتمالی خود که از هوش مصنوعی (LLMs) می‌پرسند را بگویید که برند شما پاسخ اصلی است؟</p>
+                <textarea id="q13" name="q13" placeholder="۱. ...&#10;۲. ...&#10;۳. ...&#10;۴. ...&#10;۵. ..."></textarea>
+                <div class="btn-container">
+                    <button class="btn-prev" onclick="prevStep()">قبلی</button>
+                    <button class="btn-next" onclick="finishQuiz()">پایان و مشاهده نتیجه</button>
+                </div>
+            </div>
+
+            <!-- Result -->
+            <div class="step" id="resultStep">
+                <header>
+                    <h1>نتیجه نهایی پرسشنامه</h1>
+                    <p>پاسخ‌های شما با موفقیت ثبت شد.</p>
+                </header>
+                <div id="answersContainer"></div>
+                
+                <div class="btn-container" style="flex-direction: column;">
+                    <button class="btn-download" onclick="downloadHTML()">دانلود نسخه کامل (HTML)</button>
+                    <button class="btn-download" style="background-color: var(--secondary-color); margin-top: 10px;" onclick="downloadTXT()">دانلود به صورت متنی (TXT)</button>
+                    <button class="btn-prev" style="margin-top: 10px; width:100%" onclick="editAnswers()">بازگشت و ویرایش</button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<footer class="growth-footer">
+    <div class="footer-brand-block">
+        <span class="brand-name">حسین دادخواه</span>
+        <span class="brand-role">معمار رشد</span>
+    </div>
+    
+    <div class="footer-contact-block">
+        <a class="cta-btn" href="tel:+989338505002" title="تماس">
+            <svg class="cta-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 0 0-1.01.24l-1.57 1.97c-2.83-1.49-5.15-3.8-6.62-6.65l1.97-1.59c.23-.18.31-.49.24-.79-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3.5 3 4.24 3 5.3c0 9.77 7.93 17.7 17.7 17.7 1.06 0 1.8-.65 1.8-1.19v-3.74c0-.54-.45-.99-.99-.99z"/></svg>
+        </a>
+        <span class="contact-phone">0933-850-5002</span>
+    </div>
+</footer>
+
+<script>
+    const STORAGE_KEY = 'differentiation_quiz_data_v2';
+    let currentStep = 0;
+    const steps = document.querySelectorAll('.step');
+    const progressBar = document.getElementById('progressBar');
+    
+    window.onload = function() {
+        loadData();
+        showStep(currentStep);
+        
+        document.querySelectorAll('input, textarea').forEach(input => {
+            input.addEventListener('input', () => {
+                input.classList.remove('error'); // Clear error style on input
+                saveData();
+            });
+            input.addEventListener('change', saveData);
+        });
+
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const name = this.name;
+                document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+                    r.parentElement.classList.remove('selected');
+                });
+                this.parentElement.classList.add('selected');
+            });
+        });
+    };
+
+    // --- Validation System ---
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        const msgEl = document.getElementById('toast-message');
+        msgEl.innerText = message;
+        toast.classList.add('show');
+        
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 4000); // 4 seconds visibility
+    }
+
+    function validateStep(n) {
+        const currentStepEl = document.querySelector(`.step[data-step="${n}"]`);
+        
+        // Skip validation for intro and info slides that have no inputs
+        if (n === 0 || n === 7) return true;
+
+        // 1. Check Textareas
+        const textarea = currentStepEl.querySelector('textarea');
+        if (textarea) {
+            const val = textarea.value.trim();
+            
+            // Basic length check (prevent empty or nonsense)
+            if (val.length < 5) {
+                textarea.classList.add('error');
+                showToast("لطفاً پاسخ کامل‌تری بنویسید (حداقل ۵ کاراکتر).");
+                return false;
+            }
+
+            // Concept Validation: Q1
+            if (n === 1) {
+                const forbidden = ["کیفیت بالا", "خدمات بهتر", "خوب", "عالی"];
+                for (let word of forbidden) {
+                    if (val.includes(word)) {
+                        textarea.classList.add('error');
+                        showToast(`پاسخ نباید شامل عبارات کلی مثل "${word}" باشد. لطفاً تمایز عینی بنویسید.`);
+                        return false;
+                    }
+                }
+            }
+
+            // Concept Validation: Q3
+            if (n === 3) {
+                const forbidden = ["برند ما قوی", "ما اولین بودیم", "تیم ما بهتر"];
+                if (forbidden.some(f => val.includes(f))) {
+                    textarea.classList.add('error');
+                    showToast("پاسخ‌هایی مثل «برند قوی‌تر» یا «اولین بودن» قابل قبول نیستند.");
+                    return false;
+                }
+            }
+            
+            // Concept Validation: Q5 (Formula)
+            if (n === 5) {
+                 if (val.length < 10) {
+                     textarea.classList.add('error');
+                     showToast("لطفاً محاسبات و فرمول ارزش را دقیق‌تر بنویسید.");
+                     return false;
+                 }
+            }
+        }
+
+        // 2. Check Radios
+        const radioGroup = currentStepEl.querySelector('.radio-group');
+        if (radioGroup) {
+            const checked = radioGroup.querySelector('input[type="radio"]:checked');
+            if (!checked) {
+                showToast("لطفاً یکی از گزینه‌ها را انتخاب کنید.");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    function showStep(n) {
+        steps.forEach((step, index) => {
+            step.classList.remove('active');
+            if(index === n) step.classList.add('active');
+        });
+        
+        const progress = ((n) / (steps.length - 1)) * 100;
+        progressBar.style.width = progress + '%';
+        
+        document.querySelector('.container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function nextStep() {
+        if (!validateStep(currentStep)) return; // Stop if invalid
+
+        if (currentStep < steps.length - 1) {
+            currentStep++;
+            showStep(currentStep);
+        }
+    }
+
+    function prevStep() {
+        if (currentStep > 0) {
+            currentStep--;
+            showStep(currentStep);
+        }
+    }
+
+    function finishQuiz() {
+        if (!validateStep(currentStep)) return; // Validate last step too
+        
+        generateSummary();
+        progressBar.style.width = '100%';
+        steps.forEach(s => s.classList.remove('active'));
+        document.getElementById('resultStep').classList.add('active');
+    }
+
+    function editAnswers() {
+        document.getElementById('resultStep').classList.remove('active');
+        showStep(currentStep); 
+    }
+
+    function saveData() {
+        const formData = {};
+        document.querySelectorAll('textarea').forEach(el => formData[el.name] = el.value);
+        const radios = document.querySelectorAll('input[type="radio"]:checked');
+        radios.forEach(r => formData[r.name] = r.value);
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(cb => formData[cb.id] = cb.checked);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+    }
+
+    function loadData() {
+        const data = localStorage.getItem(STORAGE_KEY);
+        if (!data) return;
+        const formData = JSON.parse(data);
+
+        for (const [key, value] of Object.entries(formData)) {
+            const el = document.getElementsByName(key)[0];
+            if (el && (el.tagName === 'TEXTAREA' || el.type === 'text')) {
+                el.value = value;
+            }
+        }
+
+        for (const [key, value] of Object.entries(formData)) {
+            const radio = document.querySelector(`input[name="${key}"][value="${value}"]`);
+            if (radio) {
+                radio.checked = true;
+                radio.parentElement.classList.add('selected');
+            }
+        }
+        
+        for (const [key, value] of Object.entries(formData)) {
+             const cb = document.getElementById(key);
+             if (cb) cb.checked = value;
+        }
+    }
+
+    function generateSummary() {
+        const container = document.getElementById('answersContainer');
+        container.innerHTML = '';
+        const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        
+        const inputsMap = [
+            { id: 'q1', title: 'سوال ۱: پروگرس مشتری' },
+            { id: 'q2', title: 'سوال ۲: اگر برند نابود شود' },
+            { id: 'q3', title: 'سوال ۳: سد دفاعی در برابر رقیب ۱۰ برابری' },
+            { id: 'q4', title: 'سوال ۴: افزایش ۲۰٪ قیمت' },
+            { id: 'q5', title: 'سوال ۵: فرمول ارزش و صرفه‌جویی' },
+            { id: 'q6', title: 'سوال ۶: هزینه جابجایی' },
+            { id: 'q7', title: 'سوال ۷: محاسبات CAC و Real LTV' },
+            { id: 'q8', title: 'سوال ۸: قانون وبر-فچنر (تست ۳ ثانیه)' },
+            { id: 'q9', title: 'سوال ۹: جابجایی پنهانی محصول' },
+            { id: 'q10', title: 'سوال ۱۰: نیاز به آموزش' },
+            { id: 'q11', title: 'سوال ۱۱: بسته ویژگی‌های مشتریان' },
+            { id: 'q12', title: 'سوال ۱۲: جستجوهای گوگل' },
+            { id: 'q13', title: 'سوال ۱۳: پرامپت‌های هوش مصنوعی' }
+        ];
+
+        inputsMap.forEach(item => {
+            let answer = data[item.id] || "پاسخی ثبت نشده است.";
+            
+            if(item.id === 'q6') {
+                let extras = [];
+                if(data['sc1']) extras.push("داده‌های تاریخی از دست می‌رود");
+                if(data['sc2']) extras.push("نیاز به آموزش مجدد دارد");
+                if(data['sc3']) extras.push("جریمه مالی دارد");
+                if(extras.length > 0) {
+                    answer = "موارد تیک خورده: " + extras.join('، ') + "\n\nتوضیحات: " + answer;
+                }
+            }
+
+            const div = document.createElement('div');
+            div.className = 'result-item';
+            div.innerHTML = `
+                <div class="result-question">${item.title}</div>
+                <div class="result-answer">${answer.replace(/\n/g, '<br>')}</div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function downloadTXT() {
+        const container = document.getElementById('answersContainer');
+        let text = "نتایج پرسشنامه تمایز واقعی\n";
+        text += "---------------------------\n";
+        text += "حسین دادخواه: معمار رشد | 0933-850-5002\n\n";
+        
+        container.querySelectorAll('.result-item').forEach(item => {
+            const q = item.querySelector('.result-question').innerText;
+            const a = item.querySelector('.result-answer').innerText;
+            text += `${q}\n${a}\n\n---------------------------\n\n`;
+        });
+
+        const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "differentiation-answers.txt";
+        link.click();
+    }
+
+    function downloadHTML() {
+        const style = document.querySelector('style').outerHTML;
+        const bodyContent = document.getElementById('answersContainer').innerHTML;
+        
+        const finalHtml = `
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>گزارش نهایی پرسشنامه تمایز</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    ${style}
+    <style>
+        body{padding: 40px; background: #fff;} 
+        .container{box-shadow:none; max-width: 800px; margin: 0 auto; border:none;}
+        .growth-footer { display: none; }
+        .btn-container { display: none; }
+        .print-footer { margin-top: 50px; text-align: center; border-top: 2px solid #000; padding-top: 20px;}
+        .toast-container { display: none; } /* Hide toasts in static report */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>گزارش نهایی پرسشنامه تمایز</h1>
+        <hr>
+        ${bodyContent}
+        <div class="print-footer">
+            <h3>حسین دادخواه: معمار رشد</h3>
+            <p>0933-850-5002</p>
+        </div>
+    </div>
+</body>
+</html>`;
+
+        const blob = new Blob([finalHtml], { type: "text/html;charset=utf-8" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "differentiation-report.html";
+        link.click();
+    }
+</script>
+
+</body>
+</html>
