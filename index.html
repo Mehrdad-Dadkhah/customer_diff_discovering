@@ -2,11 +2,11 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>پرسشنامه تمایز واقعی پروفایل مشتریان</title>
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
     
-    <style>
+    <style id="main-style">
         :root {
             --primary-color: #2563eb;       
             --secondary-color: #1e40af;     
@@ -22,18 +22,18 @@
             --footer-text: #f8fafc;         
             --footer-sub: #94a3b8;          
             
-            /* رنگ‌های جدید برای ابزار تفکر */
-            --insight-bg: #eff6ff;          /* آبی بسیار روشن */
-            --insight-border: #bfdbfe;      /* آبی ملایم */
-            --insight-text: #1e3a8a;        /* سرمه‌ای خوانا */
-            --input-bg: #f1f5f9;            /* خاکستری ملایم برای اینپوت */
-            --code-bg: #1e293b;             /* رنگ تیره برای فرمول */
-            --code-text: #e2e8f0;           /* متن روشن برای فرمول */
+            --insight-bg: #eff6ff;          
+            --insight-border: #bfdbfe;      
+            --insight-text: #1e3a8a;        
+            --input-bg: #f1f5f9;            
+            --code-bg: #1e293b;             
+            --code-text: #e2e8f0;           
         }
 
         * {
             box-sizing: border-box;
             outline: none;
+            -webkit-tap-highlight-color: transparent; /* حذف هایلایت آبی در موبایل */
         }
 
         body {
@@ -46,6 +46,8 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
+            /* پشتیبانی بهتر از موبایل */
+            min-height: 100dvh; 
             line-height: 1.8;
         }
 
@@ -113,7 +115,7 @@
 
         .step {
             display: none;
-            animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeIn 0.4s ease-out; /* سریعتر برای موبایل */
         }
 
         .step.active {
@@ -121,7 +123,7 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -131,7 +133,7 @@
             color: var(--text-light);
         }
 
-        /* --- NEW INSIGHT BOX (REPLACES WARNING) --- */
+        /* Insight Box */
         .insight-box {
             background-color: var(--insight-bg);
             border: 1px solid var(--insight-border);
@@ -152,7 +154,7 @@
             margin-top: 2px;
         }
 
-        /* --- NEW FORMULA HERO BLOCK --- */
+        /* Formula Hero */
         .formula-hero {
             background-color: var(--code-bg);
             color: var(--code-text);
@@ -160,13 +162,14 @@
             border-radius: 12px;
             margin: 1.5rem 0;
             text-align: center;
-            font-family: 'Courier New', Courier, monospace; /* فونت مهندسی */
+            font-family: 'Courier New', Courier, monospace;
             font-size: 1.1rem;
             font-weight: 600;
             letter-spacing: 1px;
             border: 1px solid #334155;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-            direction: ltr; /* فرمول چپ چین */
+            direction: ltr;
+            word-wrap: break-word; /* جلوگیری از اسکرول افقی در موبایل */
         }
 
         ul, ol {
@@ -182,20 +185,21 @@
             color: var(--text-color);
         }
 
-        /* --- NEW INPUT CANVAS --- */
+        /* Input Canvas */
         textarea {
             width: 100%;
             padding: 20px;
-            border: 1px solid transparent; /* حذف بوردر پیش فرض */
+            border: 1px solid transparent;
             border-radius: 12px;
             resize: vertical;
             min-height: 160px;
             font-family: 'Vazirmatn', sans-serif;
-            font-size: 1rem;
+            font-size: 16px; /* جلوگیری از زوم خودکار در iOS */
             background-color: var(--input-bg);
             color: var(--text-color);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+            -webkit-appearance: none; /* حذف استایل پیش‌فرض iOS */
         }
 
         textarea:focus {
@@ -230,16 +234,11 @@
             cursor: pointer;
             transition: all 0.2s;
             background-color: var(--input-bg);
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .radio-option:hover {
+        .radio-option:active {
             background-color: #e2e8f0;
-        }
-
-        .radio-option input[type="radio"] {
-            margin-left: 12px;
-            accent-color: var(--primary-color);
-            transform: scale(1.2);
         }
 
         .radio-option.selected {
@@ -248,7 +247,13 @@
             box-shadow: 0 2px 4px rgba(37, 99, 235, 0.05);
         }
 
-        /* Tables */
+        .radio-option input[type="radio"] {
+            margin-left: 12px;
+            accent-color: var(--primary-color);
+            transform: scale(1.2);
+            pointer-events: none; /* کلیک روی باکس اعمال شود */
+        }
+
         table {
             width: 100%;
             border-collapse: separate;
@@ -276,6 +281,7 @@
             border-bottom: none;
         }
 
+        /* Buttons */
         .btn-container {
             display: flex;
             justify-content: space-between;
@@ -294,6 +300,7 @@
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
+            touch-action: manipulation; /* بهبود کلیک در موبایل */
         }
 
         .btn-next {
@@ -303,9 +310,9 @@
             box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
         }
 
-        .btn-next:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-1px);
+        .btn-next:active {
+            transform: translateY(0);
+            box-shadow: none;
         }
 
         .btn-prev {
@@ -314,21 +321,12 @@
             border: 1px solid #cbd5e1;
         }
 
-        .btn-prev:hover {
-            background-color: #f1f5f9;
-            color: var(--text-color);
-        }
-
         .btn-download {
             background-color: var(--success-color);
             color: white;
             width: 100%;
             margin-top: 10px;
             font-weight: 600;
-        }
-
-        .btn-download:hover {
-            background-color: #059669;
         }
 
         .result-item {
@@ -348,9 +346,10 @@
             color: var(--text-color);
             white-space: pre-wrap;
             line-height: 1.8;
+            word-wrap: break-word;
         }
 
-        /* --- FOOTER STYLES --- */
+        /* Footer */
         .growth-footer {
             width: 100%;
             height: 90px;
@@ -362,6 +361,7 @@
             align-items: center;
             margin-top: auto;
             box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            flex-shrink: 0; /* جلوگیری از جمع شدن فوتر */
         }
 
         .footer-brand-block {
@@ -375,7 +375,6 @@
             font-weight: 700;
             font-size: 16px;
             color: #ffffff;
-            letter-spacing: -0.5px;
             margin-bottom: 2px;
         }
 
@@ -408,15 +407,7 @@
             height: 40px;
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 8px;
-            transition: all 0.2s ease;
-            cursor: pointer;
             border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .cta-btn:hover {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-            transform: translateY(-2px);
         }
 
         .cta-icon {
@@ -425,26 +416,29 @@
             fill: #ffffff;
         }
 
-        /* --- TOAST NOTIFICATION STYLES --- */
+        /* Toast */
         .toast-container {
             position: fixed;
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%) translateY(20px);
-            background-color: #dc2626; /* رنگ قرمز هشدار */
+            background-color: #dc2626;
             color: white;
             padding: 14px 24px;
             border-radius: 12px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             z-index: 2000;
             font-size: 0.95rem;
             font-weight: 500;
             opacity: 0;
-            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             pointer-events: none;
             display: flex;
             align-items: center;
             gap: 10px;
+            width: 90%;
+            max-width: 400px;
+            justify-content: center;
         }
 
         .toast-container.show {
@@ -452,21 +446,23 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        .toast-icon {
-            font-size: 1.2rem;
-        }
-
         @media (max-width: 600px) {
             .container {
                 border-radius: 0;
-                margin-top: 0;
-                margin-bottom: 0;
+                margin: 0;
+                /* فاصله از فوتر در صورت نیاز */
+                margin-bottom: 0; 
                 box-shadow: none;
                 border: none;
                 min-height: auto; 
+                width: 100%;
+            }
+            body {
+                background-color: var(--card-bg); /* یکدست کردن پس‌زمینه در موبایل */
             }
             .content-wrapper {
                 padding: 1.5rem;
+                padding-bottom: 1rem;
             }
             
             .growth-footer {
@@ -474,11 +470,7 @@
                 height: 80px;
             }
             
-            .toast-container {
-                width: 90%;
-                text-align: center;
-                justify-content: center;
-            }
+            h1 { font-size: 1.4rem; }
         }
     </style>
 </head>
@@ -818,24 +810,24 @@
         
         document.querySelectorAll('input, textarea').forEach(input => {
             input.addEventListener('input', () => {
-                input.classList.remove('error'); // Clear error style on input
+                input.classList.remove('error'); 
                 saveData();
             });
             input.addEventListener('change', saveData);
         });
 
         document.querySelectorAll('input[type="radio"]').forEach(radio => {
-            radio.addEventListener('change', function() {
+            radio.addEventListener('click', function() {
                 const name = this.name;
                 document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
                     r.parentElement.classList.remove('selected');
                 });
                 this.parentElement.classList.add('selected');
+                this.checked = true; // Ensure check logic for mobile taps
             });
         });
     };
 
-    // --- Validation System ---
     function showToast(message) {
         const toast = document.getElementById('toast');
         const msgEl = document.getElementById('toast-message');
@@ -844,28 +836,24 @@
         
         setTimeout(() => {
             toast.classList.remove('show');
-        }, 4000); // 4 seconds visibility
+        }, 4000); 
     }
 
     function validateStep(n) {
         const currentStepEl = document.querySelector(`.step[data-step="${n}"]`);
         
-        // Skip validation for intro and info slides that have no inputs
         if (n === 0 || n === 7) return true;
 
-        // 1. Check Textareas
         const textarea = currentStepEl.querySelector('textarea');
         if (textarea) {
             const val = textarea.value.trim();
             
-            // Basic length check (prevent empty or nonsense)
             if (val.length < 5) {
                 textarea.classList.add('error');
                 showToast("لطفاً پاسخ کامل‌تری بنویسید (حداقل ۵ کاراکتر).");
                 return false;
             }
 
-            // Concept Validation: Q1
             if (n === 1) {
                 const forbidden = ["کیفیت بالا", "خدمات بهتر", "خوب", "عالی"];
                 for (let word of forbidden) {
@@ -877,7 +865,6 @@
                 }
             }
 
-            // Concept Validation: Q3
             if (n === 3) {
                 const forbidden = ["برند ما قوی", "ما اولین بودیم", "تیم ما بهتر"];
                 if (forbidden.some(f => val.includes(f))) {
@@ -887,7 +874,6 @@
                 }
             }
             
-            // Concept Validation: Q5 (Formula)
             if (n === 5) {
                  if (val.length < 10) {
                      textarea.classList.add('error');
@@ -897,7 +883,6 @@
             }
         }
 
-        // 2. Check Radios
         const radioGroup = currentStepEl.querySelector('.radio-group');
         if (radioGroup) {
             const checked = radioGroup.querySelector('input[type="radio"]:checked');
@@ -923,7 +908,7 @@
     }
 
     function nextStep() {
-        if (!validateStep(currentStep)) return; // Stop if invalid
+        if (!validateStep(currentStep)) return; 
 
         if (currentStep < steps.length - 1) {
             currentStep++;
@@ -939,7 +924,7 @@
     }
 
     function finishQuiz() {
-        if (!validateStep(currentStep)) return; // Validate last step too
+        if (!validateStep(currentStep)) return; 
         
         generateSummary();
         progressBar.style.width = '100%';
@@ -1032,6 +1017,26 @@
         });
     }
 
+    // --- Optimized Mobile Download Function ---
+    function triggerDownload(blob, filename) {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = filename;
+        link.style.display = 'none';
+        
+        // Append to body to fix iOS/Mobile Safari issues
+        document.body.appendChild(link);
+        
+        link.click();
+        
+        // Clean up
+        setTimeout(() => {
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        }, 2000);
+    }
+
     function downloadTXT() {
         const container = document.getElementById('answersContainer');
         let text = "نتایج پرسشنامه تمایز واقعی\n";
@@ -1045,14 +1050,12 @@
         });
 
         const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "differentiation-answers.txt";
-        link.click();
+        triggerDownload(blob, "differentiation-answers.txt");
     }
 
     function downloadHTML() {
-        const style = document.querySelector('style').outerHTML;
+        // Use ID to strictly select only our main style
+        const style = document.getElementById('main-style').outerHTML;
         const bodyContent = document.getElementById('answersContainer').innerHTML;
         
         const finalHtml = `
@@ -1060,16 +1063,17 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>گزارش نهایی پرسشنامه تمایز</title>
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
     ${style}
     <style>
-        body{padding: 40px; background: #fff;} 
-        .container{box-shadow:none; max-width: 800px; margin: 0 auto; border:none;}
+        body{padding: 40px; background: #fff; min-height: auto;} 
+        .container{box-shadow:none; max-width: 800px; margin: 0 auto; border:none; width: 100%;}
         .growth-footer { display: none; }
         .btn-container { display: none; }
         .print-footer { margin-top: 50px; text-align: center; border-top: 2px solid #000; padding-top: 20px;}
-        .toast-container { display: none; } /* Hide toasts in static report */
+        .toast-container { display: none; }
     </style>
 </head>
 <body>
@@ -1086,10 +1090,7 @@
 </html>`;
 
         const blob = new Blob([finalHtml], { type: "text/html;charset=utf-8" });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "differentiation-report.html";
-        link.click();
+        triggerDownload(blob, "differentiation-report.html");
     }
 </script>
 
